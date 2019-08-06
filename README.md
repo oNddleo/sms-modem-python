@@ -5,7 +5,7 @@ A Project SMS Modem use python languages for Chinese Modem or Aduino SIM Card
 Install Python in [Python](https://www.python.org/downloads/) page and setup Program Python
 
 
-Install serial library 
+Install pyserial library 
 ```
     pip install pyserial
 ```
