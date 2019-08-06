@@ -23,9 +23,9 @@ if __name__ == "__main__":
     # pool.close() 
     # pool.join()
     _file = Utils(constant.SMS_FILE)
-    for s in sms.devices:
-        _port = sms.get_port(s)
-        sms.send_sms("GC", "195")
+    # for s in sms.devices:
+    #     _port = sms.get_port(s)
+    #     sms.send_sms('GC', '195')
 
     for s in sms.devices:
         _port = sms.get_port(s)

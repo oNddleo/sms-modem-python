@@ -66,19 +66,22 @@ class Modem:
 				print(b'number: %s , balance: %s, expried_date: %s' % (number, balance, expried_date))
 		self.ser.write(b'AT+CUSD=2\r\n')
 		return (number, balance, expried_date)
+	"""
+		Sending message to phonenumber
+	"""
 	def send_sms(self, message, phonenumber):
-		self.ser.write(b'AT+CMGF=1\r')
+		self.ser.write(b'AT+CMGF=1\r\n')
 		# send sms
 		print("Sending sms to: %s with message: %s" % (phonenumber, message))
 		self.ser.write(b'AT+CMGS="' + phonenumber.encode() + b'"\r')
 		time.sleep(0.5)
-		self.ser.write(message.encode() + b"\r")
+		self.ser.write(message.encode('utf-8') + b'\r')
 		time.sleep(0.5)
 		self.ser.write(b'\x1A\r\n')
-		time.sleep(0.5)
+		time.sleep(1)
 		response = self.ser.readlines()
-		time.sleep(0.5)
-		print("SENT")
+		time.sleep(1)
+		print("--SENT: ", response)
 
 	"""
 		Filter \r\n in msg 
@@ -116,11 +119,17 @@ class Modem:
 
 		self.ser.write(b'AT+CMGF=1\r\n')
 		time.sleep(0.5)
-		
+		self.ser.write(b'AT+CPMS="SM"\r\n')
+		time.sleep(0.5)
 		self.ser.write(b'AT+CMGL="ALL"\r\n')
 		time.sleep(1)
+		self.ser.write(b'AT+CMGD=0\r\n')
+		time.sleep(2)
+		msg = self.ser.readline()
+		print('delete: ', msg)
 		# filter sms \r\n and strip
 		filter_sms = self.filter_message()
+		print('filter: ', filter_sms)
 		filter_oke = list(filter(lambda e : e != b'OK', filter_sms))
 
 		result = []
@@ -143,4 +152,5 @@ class Modem:
 				iterator += 1
 
 			print('result: ', result)
+
 		return result
