@@ -7,7 +7,7 @@ Install Python in [Python](https://www.python.org/downloads/) page and setup Pro
 
 Install serial library 
 ```
-    pip install serial
+    pip install pyserial
 ```
 Use Visual Studio Code to open Project and follow Usage to Running Program :)
 
