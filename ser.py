@@ -83,6 +83,16 @@ class Ser:
         SMS Service
         Read all messages
         """
+    def delete_sms(self):
+        self.ser.write(b'AT+CMGF=1\r\n')
+        time.sleep(0.5)
+        self.ser.write(b'AT+CPMS="SM"\r\n')
+        time.sleep(1)
+        self.ser.write(b'AT+CMGD=1,4\r\n')
+        time.sleep(0.5)
+        while self.ser.inWaiting() > 0:
+            ret = self.ser.readline()
+            print('--Delete SMS: ', ret)
     def read_sms(self):
         # print("LOOKING FOR SMS")
         # pdu = "07914889200026F5040B914819854354F400009170226170428208F3F61C442FCFE9"
@@ -94,14 +104,13 @@ class Ser:
         time.sleep(0.5)
         self.ser.write(b'AT+CMGL="ALL"\r\n')
         time.sleep(1)
-        self.ser.write(b'AT+CMGD=0\r\n')
-        time.sleep(2)
+        
         msg = self.ser.readline()
         print('delete: ', msg)
         # filter sms \r\n and strip
         filter_sms = self.filter_message()
         print('filter: ', filter_sms)
-        filter_oke = list(filter(lambda e : e != b'OK', filter_sms))
+        filter_oke = list(filter(lambda e : e != b'OK' and not e.startswith(b'+CMTI:') and not e.startswith(b'+CMS ERROR'), filter_sms))
 
         result = []
         sms_done = b''

@@ -7,7 +7,7 @@ Install Python in [Python](https://www.python.org/downloads/) page and setup Pro
 
 Install pyserial library 
 ```
-    pip install pyserial
+pip install pyserial
 ```
 Use Visual Studio Code to open Project and follow Usage to Running Program :)
 
@@ -16,7 +16,7 @@ Use Visual Studio Code to open Project and follow Usage to Running Program :)
 Use command to running program 
 ### Windows 
 ```
- python.exe .\main.py
+python.exe .\main.py
 ```
 
 ### Linux
