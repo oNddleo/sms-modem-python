@@ -1,6 +1,7 @@
 import serial
 import re
 import time
+import threading
 class Ser:
     ser = None
 
@@ -74,11 +75,23 @@ class Ser:
         Calling number and set timeout when accept
 
         """
-    def call(phone_number, timeout):
-
+    def call(self, phone_number):
+        
         print("CALLING PHONE")
-        ser.write(b'ATD0915834454;\r\n')
+        self.ser.write(b'ATD' + phone_number.encode() + b';\r\n')
+        time.sleep(1)
+        data = self.ser.readline()
+        ret = self.filter_message()
+        time.sleep(1)
+        print('ret: ', ret)
+        time.sleep(6)
+        end_call = self.ser.write(b'ATH\r\n')
+        print('end call', end_call)
+        time.sleep(1)
+            
 
+        # while self.ser.inWaiting() > 0:
+            # print('end: ', self.ser.readlines())
         """
         SMS Service
         Read all messages
@@ -95,21 +108,15 @@ class Ser:
             print('--Delete SMS: ', ret)
     def read_sms(self):
         # print("LOOKING FOR SMS")
-        # pdu = "07914889200026F5040B914819854354F400009170226170428208F3F61C442FCFE9"
-        # sms = gsmself.ser.pdu.decodeSmsPdu(pdu)
-        # print(json.dumps(sms))
         self.ser.write(b'AT+CMGF=1\r\n')
         time.sleep(0.5)
         self.ser.write(b'AT+CPMS="SM"\r\n')
         time.sleep(0.5)
         self.ser.write(b'AT+CMGL="ALL"\r\n')
         time.sleep(1)
-        
-        msg = self.ser.readline()
-        print('delete: ', msg)
+
         # filter sms \r\n and strip
         filter_sms = self.filter_message()
-        print('filter: ', filter_sms)
         filter_oke = list(filter(lambda e : e != b'OK' and not e.startswith(b'+CMTI:') and not e.startswith(b'+CMS ERROR'), filter_sms))
 
         result = []
@@ -130,7 +137,6 @@ class Ser:
                     result.append(sms_done)
                     break
                 iterator += 1
-
             print('result: ', result)
 
         return result

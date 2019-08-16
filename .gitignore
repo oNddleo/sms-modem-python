@@ -1,4 +1,6 @@
 .vscode/
 __pycache__/
-sms.txt
 Sample.txt
+build/*
+dist/*
+*.egg-info
